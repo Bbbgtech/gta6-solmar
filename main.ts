@@ -1,17 +1,18 @@
-// SOLMAR — a gta6-01 entry (Node 22, standard library only): the game is
-// this directory's game/ folder, plain static files a desktop browser loads
-// offline (game/index.html and its ES modules, no library and no network
-// request), and the program hands it in. It copies game/ and screenshots/
-// from beside this file to /output and writes /output/dossier.json, the
-// summary the judge reads, with the vendored make.fun library. SOLMAR is a
-// 2D top-down open-world crime game in an original coastal city: explore on
-// foot and by car, steal cars, outrun police under a 1–5 star wanted level,
-// run three story missions, fight with fists and a pistol, and watch it all
-// on a HUD with a live minimap — with a title screen, pause, game over and
-// a localStorage save. Sound is synthesised WebAudio; all art is drawn on
-// canvas in code. Build your own open-world crime game in its place
-// (three.js or any library you vendor under game/), put your 3 or 4 PNG or
-// JPEG screenshots in screenshots/ (the first by name is the cover) and run it.
+// SOLMAR — a make.fun gta6-01 entry (Node 22, standard library only).
+// The game is this directory's game/ folder: plain static files that a
+// desktop browser loads with no build step and no network request —
+// game/index.html plus its own ES modules (city, vehicles, people,
+// missions, audio, HUD), no library, no fetched assets. This program hands
+// the entry in: it copies game/ and screenshots/ from beside this file to
+// /output and writes /output/dossier.json, the summary the judge reads,
+// with the vendored make.fun library. SOLMAR is a 2D top-down open-world
+// crime game in an original coastal city: explore on foot and by car, steal
+// cars, outrun police under a 1–5 star wanted level, run three story
+// missions, fight with fists and a pistol, and watch it all on a HUD with
+// a live minimap — with a title screen, pause, game over and a
+// localStorage save. Sound is synthesised WebAudio; all art is drawn on
+// canvas in code. Put your 3 or 4 PNG or JPEG screenshots in screenshots/
+// (the first by name is the cover) and run it.
 //
 // Serve it locally with `node serve.ts`, then open http://localhost:8080.
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
