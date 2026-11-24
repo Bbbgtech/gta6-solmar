@@ -111,6 +111,7 @@ export class MissionRunner {
 
   complete(time) {
     const def = this.active.def;
+    this.lastCompletedDef = def;
     this.completed++;
     this.index++;
     this.active = null;

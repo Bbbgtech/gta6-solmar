@@ -454,8 +454,7 @@ function update(dt) {
   updatePolice(dt);
   const result = s.missions.update(dt, s.time, p);
   if (result === 'complete') {
-    p.cash += s.missions.completed > 0 ? 0 : 0; // reward applied below via def
-    const def = MISSIONS_LAST_COMPLETED;
+    const def = s.missions.lastCompletedDef;
     if (def) p.cash += def.reward;
     s.sound.jingle();
     writeSave();
@@ -493,13 +492,6 @@ function update(dt) {
     w: vw, h: vh,
   };
 }
-let MISSIONS_LAST_COMPLETED = null;
-// Track the reward of the mission that just completed.
-const _origComplete = MissionRunner.prototype.complete;
-MissionRunner.prototype.complete = function (time) {
-  MISSIONS_LAST_COMPLETED = this.active ? this.active.def : null;
-  return _origComplete.call(this, time);
-};
 
 // ---- render --------------------------------------------------------------------------------------
 function drawWaypoint(ctx) {
@@ -595,16 +587,20 @@ function frame(now) {
   render();
   if (!window.__solmarReady) {
     s._frames = (s._frames || 0) + 1;
-    if (s._frames >= 3) {
-      window.__solmarReady = true;
-      window.__solmar = {
-        mode: s.mode,
-        wanted: s.player.wantedStars,
-        cash: s.player.cash,
-        cars: s.cars.length,
-        peds: s.peds.length,
-      };
-    }
+    if (s._frames >= 3) window.__solmarReady = true;
+  }
+  if (window.__solmarReady) {
+    window.__solmar = {
+      mode: s.mode,
+      wanted: s.player.wantedStars,
+      cash: s.player.cash,
+      cars: s.cars.length,
+      peds: s.peds.length,
+      px: Math.round(s.player.x),
+      py: Math.round(s.player.y),
+      inCar: !!s.player.inCar,
+      mission: s.missions.active ? s.missions.active.def.id : null,
+    };
   }
   requestAnimationFrame(frame);
 }
@@ -674,7 +670,9 @@ function stageShot() {
     s.player.heat = 60; s.player.wantedStars = 3; s.player.lastCrime = 0;
     s.cars.push(spawnPoliceCar(1500, 1500));
     s.cars.push(spawnPoliceCar(1440, 1560));
+    s.missions.index = 1; // "Lose the Heat" — the wanted chase
     s.missions.start(0);
+    s.missions.banner = null; // keep the staged frame clean for the photo
     s.autoDrive = true;
     s.cam.x = 1500; s.cam.y = 1150;
     step(150);
@@ -682,6 +680,7 @@ function stageShot() {
     s.player.x = 2470; s.player.y = 2040;
     s.player.angle = Math.PI / 2;
     s.missions.start(0);
+    s.missions.banner = null; // keep the staged frame clean for the photo
     s.cam.x = 2470; s.cam.y = 2040;
     step(90);
   } else if (SHOT === 'city') {
